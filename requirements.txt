@@ -1,0 +1,5 @@
+numpy==1.22.0
+PyAudio==0.2.11
+slack-sdk==3.13.0
+
+-r requirements_local.txt
