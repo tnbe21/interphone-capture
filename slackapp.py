@@ -1,28 +1,28 @@
 import time
-import slack
 import os
+from slack_sdk import WebClient as SlackWebClient
 
 
 class SlackApp:
-    _last_ringed = None
+    __last_ringed = None
+    __client = SlackWebClient(token=os.environ["SLACK_API_TOKEN"])
 
-    def notify_slack(self, msg='test'):
-        INTERVAL_SEC = 20
-        CHANNEL = 'interphone_notification'
-        MENTIONED_USER = 'tanabe_taichi'
+    def notify_slack(self, msg="test"):
+        interval_sec = 20
+        channel = "interphone_notification"
+        mentioned_user = "tanabe_taichi"
 
-        if self._last_ringed is not None and time.time() < self._last_ringed + INTERVAL_SEC:
+        if self.__last_ringed is not None and time.time() < self.__last_ringed + interval_sec:
             return
 
-        self._last_ringed = time.time()
-        client = slack.WebClient(token=os.environ['SLACK_API_TOKEN'])
-        client.chat_postMessage(
-            channel='#%s' % CHANNEL,
+        self.__last_ringed = time.time()
+        self.__client.chat_postMessage(
+            channel="#%s" % channel,
             link_names=True,
-            text='@%s %s' % (MENTIONED_USER, msg)
+            text="@%s %s" % (mentioned_user, msg)
         )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     slackApp = SlackApp()
     slackApp.notify_slack()
